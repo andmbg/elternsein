@@ -64,10 +64,10 @@ def init_dashboard(flask_app, route):
     #
 
     # load data:
-    data_gb = pd.read_parquet("data/processed/geburten.parquet")
+    data_gb = pd.read_parquet(dashapp_rootdir / "data/processed/geburten.parquet")
     data_gb = data_gb.groupby(["jahr", "land"]).geburten.sum().to_frame().reset_index()
 
-    data_ewz = pd.read_parquet("data/processed/ewz.parquet")
+    data_ewz = pd.read_parquet(dashapp_rootdir / "data/processed/ewz.parquet")
 
     # scale births by state population:
     data_gb = pd.merge(data_gb, data_ewz, on=["jahr", "land"])
@@ -111,7 +111,7 @@ def init_dashboard(flask_app, route):
     #
     # recipients of Elterngeld
     #
-    data_eg = pd.read_parquet("data/processed/eg_empf.parquet")
+    data_eg = pd.read_parquet(dashapp_rootdir / "data/processed/eg_empf.parquet")
 
     data_eg = data_eg.loc[data_eg.art.eq("Insgesamt")]
     data_eg = data_eg.loc[data_eg.fm.ne("Insgesamt")]
