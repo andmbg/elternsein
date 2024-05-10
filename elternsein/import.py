@@ -1,26 +1,33 @@
+import os
 import re
 import requests
 from pathlib import Path
+import zipfile
+import tempfile
 
 import pandas as pd
+import geopandas as gpd
+
+from data.sources import destatis_sources, bkg_source
 
 
-path_raw = Path(__file__).resolve().parents[1] / "data" / "raw"
-path_processed = Path(__file__).resolve().parents[1] / "data" / "processed"
 
-geburten = path_raw / "destatis 12612-0100 - Geburten 2009-2021.csv"
-eg_empf  = path_raw / "destatis 22922-0025 - Elterngeldempfänger 2009-2021.csv"
-eg_hoehe = path_raw / "destatis 22922-0118 - dschn Höhe Elterngeld.csv"
-eg_dauer = path_raw / "destatis 22922-0125 - dschn Dauer EGeld Kreise.csv"
-steuer   = path_raw / "regionalstatistik 73111-01-01-4 - Steuern.csv"
-ewz      = path_raw / "destatis 12411-0010 - Bevölkerung.csv"
+processed_dir = Path(__file__).resolve().parents[1] / "data" / "processed"
+
+ewz      = destatis_sources["ewz"]
+geburten = destatis_sources["geburten"]
+eg_empf  = destatis_sources["eg_empf"]
+eg_hoehe = destatis_sources["eg_hoehe"]
+eg_dauer = destatis_sources["eg_dauer"]
+steuer   = destatis_sources["steuern"]  # wir warten noch, dass der Download aus der API klappt
+bkg = bkg_source
 
 #
 # Geburten
 # 
 df = pd.read_csv(
-    geburten,
-    encoding="latin-1",
+    geburten["raw_file"],
+    # encoding="latin-1",
     sep=";",
     skiprows=4,
     skipfooter=3,
@@ -39,15 +46,15 @@ df = (df
  .astype({"jahr": pd.Int64Dtype()})
 )
 
-df.to_parquet(path_processed / "geburten.parquet")
+df.to_parquet(geburten["processed_file"])
 
 
 #
 # Empfangende von Elterngeld
 #
 df = pd.read_csv(
-    eg_empf,
-    encoding="latin-1",
+    eg_empf["raw_file"],
+    # encoding="latin-1",
     sep=";",
     skiprows=6,
     header=[0, 1],
@@ -85,15 +92,15 @@ df = (
     .astype({"jahr": pd.Int64Dtype(), "quartal": pd.Int64Dtype()})
 )
 
-df.to_parquet(path_processed / "eg_empf.parquet")
+df.to_parquet(eg_empf["processed_file"])
 
 
 #
 # Höhe des Elterngeldes
 #
 df = pd.read_csv(
-    eg_hoehe,
-    encoding="latin-1",
+    eg_hoehe["raw_file"],
+    # encoding="latin-1",
     sep=";",
     skiprows=6,
     header=[0, 1],
@@ -142,15 +149,15 @@ df = df.astype({
     "eur": pd.Int64Dtype(),
 })
 
-df.to_parquet(path_processed / "eg_hoehe.parquet")
+df.to_parquet(eg_hoehe["processed_file"])
 
 
 #
 # Dauer des Elterngeldes
 #
 df = pd.read_csv(
-    eg_dauer,
-    encoding="latin-1",
+    eg_dauer["raw_file"],
+    # encoding="latin-1",
     sep=";",
     skiprows=5,
     skipfooter=4,
@@ -179,14 +186,14 @@ df = df.replace({"/": pd.NA, "-": pd.NA})
 df.jahr = df.jahr.astype(pd.Int64Dtype())
 df.monate = df.monate.str.replace(",", ".").astype(pd.Float64Dtype())
 
-df.to_parquet(path_processed / "eg_dauer.parquet")
+df.to_parquet(eg_dauer["processed_file"])
 
 
 #
 # Steuerkraft
 #
 df = pd.read_csv(
-    steuer,
+    steuer["raw_file"],
     encoding="latin-1",
     sep=";",
     skiprows=5,
@@ -213,15 +220,15 @@ df.steuer *= 1000
 
 df["steuer_pc"] = df.steuer / df.stpflichtige
 
-df.to_parquet(path_processed / "steuern.parquet")
+df.to_parquet(steuer["processed_file"])
 
 
 #
 # Einwohnerzahlen
 #
 df = pd.read_csv(
-    ewz,
-    encoding="latin-1",
+    ewz["raw_file"],
+    # encoding="latin-1",
     sep=";",
     skiprows=5,
     skipfooter=4,
@@ -241,9 +248,21 @@ df = (df
  .astype({"jahr": pd.Int64Dtype(), "ewz": pd.Int64Dtype()})
 )
 
-df.to_parquet("data/processed/ewz.parquet")
+df.to_parquet(ewz["processed_file"])
 
 
 #
 # Geodaten
 #
+with tempfile.TemporaryDirectory() as temp_dir:
+    
+    # Extract the contents of the zip file to the temporary directory
+    with zipfile.ZipFile(bkg["raw_file"], "r") as zip_file:
+        zip_file.extract(bkg["extractable"], path=temp_dir)
+    
+    # Construct the path to the extracted gpkg file
+    extracted_file_path = Path(temp_dir) / bkg["extractable"]
+
+    # Read the file with pandas
+    gdf = gpd.read_file(extracted_file_path, layer=6)
+    gdf.to_parquet(bkg["processed_file"])

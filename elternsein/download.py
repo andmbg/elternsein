@@ -13,8 +13,8 @@ logger.info("Starting new download run.")
 # Destatis und Regionalstatistik:
 #
 for source in destatis_sources.values():
-    logger.debug(f"Checking if {source['target_file']} already exists.")
-    if source["target_file"].exists():
+    logger.debug(f"Checking if {source['raw_file']} already exists.")
+    if source["raw_file"].exists():
         logger.info("Raw data file already exists. Skipping.")
         next
 
@@ -33,10 +33,10 @@ for source in destatis_sources.values():
             logger.debug(f"Encoding of {source['name']} is {encoding}.")
             content_utf8 = response.content.decode(encoding).encode("utf-8")
 
-            with open(source["target_file"], "wb") as file:
+            with open(source["raw_file"], "wb") as file:
                 file.write(content_utf8)
 
-            logger.debug(f"Wrote {len(content_utf8)} bytes to {source['target_file']}.")
+            logger.debug(f"Wrote {len(content_utf8)} bytes to {source['raw_file']}.")
 
         else:
             logger.error("Request was unsuccessful. Wrong URL?")
@@ -44,8 +44,8 @@ for source in destatis_sources.values():
 #
 # BKG (Geodaten):
 #
-if bkg_source["target_file"].exists():
-    logger.info(f"Raw data file {bkg_source['target_file']} already exists. Skipping.")
+if bkg_source["raw_file"].exists():
+    logger.info(f"Raw data file {bkg_source['raw_file']} already exists. Skipping.")
 
 else:
 
@@ -56,10 +56,10 @@ else:
 
         content = response.content
 
-        with open(bkg_source["target_file"], "wb") as file:
+        with open(bkg_source["raw_file"], "wb") as file:
             file.write(content)
         
-        logger.debug(f"Wrote {len(content)} bytes to {bkg_source['target_file']}.")
+        logger.debug(f"Wrote {len(content)} bytes to {bkg_source['raw_file']}.")
 
     else:
         logger.error("Request was unsuccessful. Wrong URL?")

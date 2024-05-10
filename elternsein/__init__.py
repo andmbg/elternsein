@@ -16,7 +16,7 @@ sys.path.append(str(dashapp_rootdir))
 logging.basicConfig(
     level=logging.DEBUG,
     filename="elternsein.log",
-    filemode="w",
+    filemode="a",
 )
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 root_logger = logging.getLogger()
