@@ -12,15 +12,15 @@ import plotly.graph_objects as go
 dashapp_rootdir = Path(__file__).resolve().parents[1]
 sys.path.append(str(dashapp_rootdir))
 
-# from .config import
-
+# set up logging:
 logging.basicConfig(
-    filename="dashboard.log",
+    level=logging.DEBUG,
+    filename="elternsein.log",
     filemode="w",
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(message)s",
 )
-
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+root_logger = logging.getLogger()
+root_logger.handlers[0].setFormatter(formatter)
 
 def init_dashboard(flask_app, route):
 
