@@ -1,15 +1,13 @@
-import os
 import re
-import requests
 from pathlib import Path
 import zipfile
 import tempfile
+import logging
 
 import pandas as pd
 import geopandas as gpd
 
 from data.sources import destatis_sources, bkg_source
-
 
 
 processed_dir = Path(__file__).resolve().parents[1] / "data" / "processed"
@@ -22,9 +20,11 @@ eg_dauer = destatis_sources["eg_dauer"]
 steuer   = destatis_sources["steuern"]  # wir warten noch, dass der Download aus der API klappt
 bkg = bkg_source
 
+logger = logging.getLogger(__name__)
+
 #
 # Geburten
-# 
+# =============================================================================
 df = pd.read_csv(
     geburten["raw_file"],
     # encoding="latin-1",
@@ -51,7 +51,7 @@ df.to_parquet(geburten["processed_file"])
 
 #
 # Empfangende von Elterngeld
-#
+# =============================================================================
 df = pd.read_csv(
     eg_empf["raw_file"],
     # encoding="latin-1",
@@ -97,7 +97,7 @@ df.to_parquet(eg_empf["processed_file"])
 
 #
 # Höhe des Elterngeldes
-#
+# =============================================================================
 df = pd.read_csv(
     eg_hoehe["raw_file"],
     # encoding="latin-1",
@@ -154,7 +154,7 @@ df.to_parquet(eg_hoehe["processed_file"])
 
 #
 # Dauer des Elterngeldes
-#
+# =============================================================================
 df = pd.read_csv(
     eg_dauer["raw_file"],
     # encoding="latin-1",
@@ -191,7 +191,7 @@ df.to_parquet(eg_dauer["processed_file"])
 
 #
 # Steuerkraft
-#
+# =============================================================================
 df = pd.read_csv(
     steuer["raw_file"],
     encoding="latin-1",
@@ -225,7 +225,7 @@ df.to_parquet(steuer["processed_file"])
 
 #
 # Einwohnerzahlen
-#
+# =============================================================================
 df = pd.read_csv(
     ewz["raw_file"],
     # encoding="latin-1",
@@ -253,7 +253,7 @@ df.to_parquet(ewz["processed_file"])
 
 #
 # Geodaten
-#
+# =============================================================================
 with tempfile.TemporaryDirectory() as temp_dir:
     
     # Extract the contents of the zip file to the temporary directory
@@ -266,3 +266,158 @@ with tempfile.TemporaryDirectory() as temp_dir:
     # Read the file with pandas
     gdf = gpd.read_file(extracted_file_path, layer=6)
     gdf.to_parquet(bkg["processed_file"])
+
+#
+#
+# Kreisdaten (Dauer EG-Bezug, Steuerkraft) mit AGS aus BKG-Daten verknüpfen
+# =============================================================================
+"""
+Die Destatis-Daten auf Kreisebene sind aus unbekannten Gründen nicht gut darin,
+Kreise einfach zu identifizieren. Es werden keine allgemeinen Gemeindeschlüssel
+(AGS) oder Regionalschlüssel ([a]rs) geliefert. Und die Namen stimmen ebenfalls
+nicht mit denen überein, die das BKG verwendet. Hier also folgt ein manueller
+Matching-Parcours.
+Schritt 1: EG-Dauer
+"""
+# Die Daten liegen in Langform vor. Wir brauchen eine Zeile pro Kreis und Jahr.
+df_dauer_krs = pd.read_parquet(destatis_sources["eg_dauer"]["processed_file"])
+
+# viele heute eingestellte Kreise mit fehlenden Daten; entfernen:
+df_dauer_krs = df_dauer_krs.dropna(subset="monate")
+
+# Geodaten laden:
+vg = gpd.read_parquet(bkg_source["processed_file"]).to_crs(epsg=4326)
+vg = vg.loc[vg.GF.ne(2)]
+
+# schönere Spaltennamen:
+columns = {
+    "AGS_0": "ags",
+    "GEN": "gen",
+    "BEZ": "bez",
+    "EWZ": "ewz",
+    "geometry": "geom",
+}
+vg = vg.filter(columns).rename(columns, axis=1)
+
+# Unser erster Match-Versuch nutzt die Tatsache, dass im EG-Datensatz die
+# Kreise benannt sind nach der Form:
+# "<NAME>, <BEZEICHNUNG>".
+# Wir konstruieren im gdf eine neue Spalte aus "gen" & "bez", die das reproduziert.
+
+# Dafür müssen wir die Großschreibung korrigieren:
+vg.loc[vg.bez.eq("Kreisfreie Stadt"), "bez"] = "kreisfreie Stadt"
+vg["krs"] = vg.gen + ", " + vg.bez
+df_dauer_matched = pd.merge(df_dauer_krs, vg, on="krs")
+
+# Nichtmatches:
+df_dauer_mismatch = df_dauer_krs.query('~krs.isin(@df_dauer_matched.krs)')
+
+# Zweiter Join: die Bezeichnung des Kreises (Stadtkreis, Landkreis, kreisfreie
+# Stadt, ...) ist bei einigen Orten Teil von `gen`; wir matchen die bisherigen
+# Überbleibsel erneut und die erfolgreichen Matches kommen ins Töpfchen:
+df_dauer_matched = pd.concat([
+    df_dauer_matched,
+    pd.merge(df_dauer_mismatch, vg.drop("krs", axis=1), left_on="krs", right_on="gen")
+])
+
+# das Kröpfchen:
+df_dauer_mismatch = df_dauer_krs.query('~krs.isin(@df_dauer_matched.krs)')
+
+# dritter & vierter Join: Einige Kreise, die im EG-Datensatz "Landkreis" oder
+# "kreisfreie Stadt" heißen, heißen in der vg250 "Kreis" oder "Stadtkreis":
+# a)
+vg.krs = vg.krs.str.replace("Kreis", "Landkreis")
+df_dauer_matched = pd.concat([
+    df_dauer_matched,
+    pd.merge(df_dauer_mismatch, vg, on="krs")
+])
+
+# das Kröpfchen:
+df_dauer_mismatch = df_dauer_krs.query('~krs.isin(@df_dauer_matched.krs)')
+
+# b)
+vg.krs = vg.krs.str.replace("Stadtkreis", "kreisfreie Stadt")
+df_dauer_matched = pd.concat([
+    df_dauer_matched,
+    pd.merge(df_dauer_mismatch, vg, on="krs")
+])
+df_dauer_mismatch = df_dauer_krs.query('~krs.isin(@df_dauer_matched.krs)')
+
+# Und zuletzt gibt es einfach einige Totalverluste, vor allem weil im BKG seit
+# einiger Zeit eine neue Nomenklatur für Präpositionen im Namen gilt: abgekürzt
+# und ohne Leerzeichen bei mehreren Wörtern. Plus, wir kürzen
+# "Oberpfalz" und "Oldenburg" ab.
+translatedict = {
+    "Dillingen a.d. Donau, Landkreis": 'Dillingen an der Donau, Landkreis',
+    "Eisenach, kreisfreie Stadt": 'Eisenach, kreisfreie Stadt (bis 30.06.2021)',
+    "Mühldorf a. Inn, Landkreis": 'Mühldorf am Inn, Landkreis',
+    "Neumarkt i.d. OPf., Landkreis": 'Neumarkt in der Oberpfalz, Landkreis',
+    "Neustadt a.d. Aisch-Bad Windsheim, Landkreis": 'Neustadt an der Aisch-Bad Windsheim, Landkreis',
+    "Neustadt a.d. Waldnaab, Landkreis": 'Neustadt an der Waldnaab, Landkreis',
+    "Oldenburg (Oldb), kreisfreie Stadt": 'Oldenburg (Oldenburg), kreisfreie Stadt',
+    "Pfaffenhofen a.d. Ilm, Landkreis": 'Pfaffenhofen an der Ilm, Landkreis',
+    "St. Wendel, Landkreis": 'Sankt Wendel, Landkreis',
+    "Weiden i.d. OPf., kreisfreie Stadt": 'Weiden in der Oberpfalz, kreisfreie Stadt',
+    "Wunsiedel i. Fichtelgebirge, Landkreis": 'Wunsiedel im Fichtelgebirge, Landkreis'
+}
+
+vg.krs = vg.krs.replace(translatedict)
+
+df_dauer_matched = pd.concat([
+    df_dauer_matched,
+    pd.merge(df_dauer_mismatch, vg, on="krs")
+])
+df_dauer_mismatch = df_dauer_krs.query('~krs.isin(@df_dauer_matched.krs)')
+
+n_mismatched_krs = df_dauer_mismatch.krs.nunique()
+logger.info(f"Matching EG-Dauer and BKG left {n_mismatched_krs} districts unmatched.")
+
+df_dauer_matched[[
+    "jahr",
+    "ags", 
+    "krs",
+    "ewz",
+    "fm",
+    "egplus",
+    "monate",
+]].to_parquet(destatis_sources["eg_dauer"]["processed_file"])
+
+"""
+Schritt 2: Steuerdaten
+"""
+dfs = pd.read_parquet(destatis_sources["steuern"]["processed_file"])
+dfs = dfs.loc[
+    dfs.rs.str.len().eq(5)
+    & dfs.steuer_pc.notna()
+]
+dfs.rs = dfs.rs + "000"
+
+eg_dauer = pd.read_parquet(destatis_sources["eg_dauer"]["processed_file"])
+
+df_kreise = pd.merge(
+    left=dfs[[
+        "jahr",
+        "krs",
+        "rs",
+        "steuer_pc"
+    ]],
+    right=eg_dauer[[
+        "jahr",
+        "ags",
+        "fm",
+        "egplus",
+        "monate"
+    ]],
+    left_on=["rs", "jahr"],
+    right_on=["ags", "jahr"],
+).filter([
+    "jahr",
+    "ags",
+    "krs",
+    "steuer_pc",
+    "fm",
+    "egplus",
+    "monate"
+])
+
+df_kreise.to_parquet(processed_dir / "kreise_steuern_egdauer.parquet")
