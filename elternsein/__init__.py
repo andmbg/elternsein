@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
 
-from data.sources import destatis_sources, bkg_source
+# from data.sources import destatis_sources, bkg_source
 from elternsein.colors import color_rgba
 from elternsein.utils import cuyo, num
 
@@ -301,14 +301,14 @@ def init_dashboard(flask_app, route):
     #
     # Map: income tax per capita
     #
-    dfs = pd.read_parquet(destatis_sources["steuern"]["processed_file"])
+    dfs = pd.read_parquet(dashapp_rootdir / "data/processed/steuern.parquet")
     # TODO interactive selection:
     dfs = dfs.query('jahr == 2019')
 
     dfs = dfs.loc[dfs.rs.str.len().le(5)]
     dfs["ags"] = dfs.rs.str.ljust(8, "0")
 
-    gdf = gpd.read_parquet(bkg_source["processed_file"])
+    gdf = gpd.read_parquet(dashapp_rootdir / "data/processed/vg250_krs.parquet")
 
     df = gpd.GeoDataFrame(
         pd.merge(
