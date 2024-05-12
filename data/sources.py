@@ -19,6 +19,7 @@ regiostat_url = "https://www-genesis.destatis.de/genesisWS/rest/2020/helloworld/
 # Beschreibung der einzelnen Abfragen:
 destatis_sources = {
     "ewz" : {
+        # Einwohnerzahlen auf Landesebene von 2009-2022
         "name": "12411-0010: Einwohnerzahlen",
         "url": destatis_tablefile_url,
         "raw_file": raw_dir / "destatis_12411-0010_Einwohnerzahlen.csv",
@@ -47,6 +48,7 @@ destatis_sources = {
         }
     },
     "geburten": {
+        # Geburtenzahlen nach Geschlecht und Bundesland, 2009-2021
         "name": "12612-0100: Geburten",
         "url": destatis_tablefile_url,
         "raw_file": raw_dir / "destatis_12612-0100_Geburten.csv",
@@ -75,6 +77,11 @@ destatis_sources = {
         }
     },
     "eg_empf": {
+        # Zahl EG-Empfangende nach
+        #   - Land
+        #   - Jahr & Quartal (2009-2021/3)
+        #   - Geschlecht
+        #   - Grundlage Berechnung der Höhe
         "name": "22922-0025: Elterngeldempfänger",
         "url": destatis_tablefile_url,
         "raw_file": raw_dir / "destatis_22922-0025_Elterngeldempfangende.csv",
@@ -103,6 +110,12 @@ destatis_sources = {
         }
     },
     "eg_hoehe": {
+        # durchschnittliche Höhe des EG nach
+        # - Land
+        # - Jahr & Quartal (2017-2023/4)
+        # - Geschlecht
+        # - mit/ohne EG-Plus
+        # - vorige Erwerbstätigkeit
         "name": "2292-0118: durchschn. Höhe des Elterngelds",
         "url": destatis_tablefile_url,
         "raw_file": raw_dir / "destatis_22922-0118_dschn_Höhe_EG.csv",
@@ -131,6 +144,7 @@ destatis_sources = {
         }
     },
     "eg_dauer": {
+        # durchschnittliche Bezugsdauer nach Kreisen, 2016-2023, Geschlecht, mit/ohne EG-Plus
         "name": "2292-0125: durchschn. Bezugsdauer EG nach Kreisen",
         "url": destatis_tablefile_url,
         "raw_file": raw_dir / "destatis_22922-0125_dschn_Dauer_EG.csv",
@@ -159,6 +173,7 @@ destatis_sources = {
         }
     },
     "steuern": {
+        # Lohn- & EK-Steuer: StPflichtige, Einkünfte, Steuersumme nach Kreisen, 2013-2019
         "name": "Regionalstatistik 73111-01-01-4: Steuern",
         "url": regiostat_url,
         "raw_file": raw_dir / "regionalstatistik 73111-01-01-4 - Steuern.csv",

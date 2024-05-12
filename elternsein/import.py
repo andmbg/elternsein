@@ -265,7 +265,21 @@ with tempfile.TemporaryDirectory() as temp_dir:
 
     # Read the file with pandas
     gdf = gpd.read_file(extracted_file_path, layer=6)
-    gdf.to_parquet(bkg["processed_file"])
+
+# Gewässer ausschließen:
+gdf = gdf.loc[gdf.GF.ne(2)].to_crs(epsg=4326)
+
+# schönere Spaltennamen:
+columns = {
+    "AGS_0": "ags",
+    "GEN": "gen",
+    "BEZ": "bez",
+    "EWZ": "ewz",
+    "geometry": "geom",
+}
+gdf = gdf.filter(columns).rename(columns, axis=1)
+
+gdf.to_parquet(bkg["processed_file"])
 
 #
 #
@@ -286,18 +300,7 @@ df_dauer_krs = pd.read_parquet(destatis_sources["eg_dauer"]["processed_file"])
 df_dauer_krs = df_dauer_krs.dropna(subset="monate")
 
 # Geodaten laden:
-vg = gpd.read_parquet(bkg_source["processed_file"]).to_crs(epsg=4326)
-vg = vg.loc[vg.GF.ne(2)]
-
-# schönere Spaltennamen:
-columns = {
-    "AGS_0": "ags",
-    "GEN": "gen",
-    "BEZ": "bez",
-    "EWZ": "ewz",
-    "geometry": "geom",
-}
-vg = vg.filter(columns).rename(columns, axis=1)
+vg = gpd.read_parquet(bkg_source["processed_file"])
 
 # Unser erster Match-Versuch nutzt die Tatsache, dass im EG-Datensatz die
 # Kreise benannt sind nach der Form:
