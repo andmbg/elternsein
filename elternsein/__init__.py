@@ -14,8 +14,8 @@ import base64
 from io import BytesIO
 
 # from data.sources import destatis_sources, bkg_source
-from elternsein.colors import color_rgba
-from elternsein.utils import cuyo, num
+from .colors import color_rgba
+from .utils import cuyo, num
 
 # import from config relatively, so it remains portable:
 dashapp_rootdir = Path(__file__).resolve().parents[1]
