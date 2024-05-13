@@ -223,6 +223,79 @@ def init_dashboard(flask_app, route):
     # package:
     fig_egb = dcc.Graph(id="fig_egb", figure=plot_egb)
 
+    # =========================================================================
+
+    #
+    # map: months of EG support
+    #
+    eg = pd.read_parquet(dashapp_rootdir / "data/processed/eg_dauer.parquet")
+    gdf = gpd.read_parquet(dashapp_rootdir / "data/processed/vg250_krs.parquet")
+
+    df = gpd.GeoDataFrame(
+        pd.merge(
+            eg, gdf[["ags", "geom"]],
+            on="ags"
+        ),
+        geometry="geom"
+    )
+
+
+    plot_map_bezdauer, axs = plt.subplots(
+        ncols=3,
+        nrows=1,
+        sharex=True, sharey=True,
+    )
+
+    plot_map_bezdauer.set_size_inches(20, 7.5)
+
+    z_var = "monate"
+    xfac_var = "fm"
+
+    # die Selektion von egplus und jahr ist dann als interaktiver Teil realisiert:
+    df_plot = df.query(
+        'egplus == "Mit Elterngeld Plus"'
+        'and jahr == 2023'
+    )
+
+    facet_var = "fm"
+    facets = df_plot[facet_var].unique()
+
+    cols = np.array([0, 1, 2])
+    subpltcoord = cols
+
+    # die drei Karten haben jeweils unterschiedliche Schwankungsbreiten und damit Farbskalen;
+    # daher benutzen wir auch drei unterschiedliche Paletten, damit nicht der Eindruck von
+    # Vergleichbarkeit entsteht:
+    colorpalettes = [
+        "viridis",
+        "plasma",
+        "cividis",
+    ]
+
+    for xy, facet in zip(subpltcoord, facets):
+
+        df_facet = df_plot.loc[df_plot[facet_var].eq(facet)]
+
+        x = xy
+        df_facet.plot(
+            ax=axs[x],
+            column=z_var,
+            legend=True,
+            cmap=colorpalettes[x]
+        )
+
+        axs[x].set_title(facet)
+
+    for ax in axs:
+        ax.axis("off")
+
+    buf = BytesIO()
+    plot_map_bezdauer.savefig(buf, format="png")
+    plot_map_bezdauer_data = base64.b64encode(buf.getbuffer()).decode("ascii")
+    fig_map_bezdauer = f"data:image/png;base64,{plot_map_bezdauer_data}"
+
+    fig_map_bezdauer = html.Img(src=fig_map_bezdauer, style={"width": "100%"})
+
     #
     # Layout
     # =========================================================================
@@ -275,7 +348,19 @@ def init_dashboard(flask_app, route):
                             "paddingTop": "50px",
                         },
                     ),
-                    
+                    dbc.Row(
+                        [
+                            dbc.Col(
+                                [fig_map_bezdauer],
+                                xs={"size": 12},
+                                lg={"size": 10, "offset": 1},
+                            ),
+                        ],
+                        style={
+                            "backgroundColor": "rgba(50,50,255, .1)",
+                            "paddingTop": "50px",
+                        },
+                    ),
                 ],
             )
         ]
