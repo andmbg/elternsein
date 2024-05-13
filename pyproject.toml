@@ -19,6 +19,7 @@ dash-bootstrap-components = "^1.6.0"
 flask = "^3.0.3"
 geopandas = "^0.14.3"
 chardet = "^5.2.0"
+colormath = "^3.0.0"
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.4"
