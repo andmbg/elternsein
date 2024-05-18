@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
 
-from data.sources import destatis_sources, bkg_source
+# from data.sources import destatis_sources, bkg_source
 from .colors import color_rgba
 from .utils import cuyo, num
 
