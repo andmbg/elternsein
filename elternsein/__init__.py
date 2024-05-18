@@ -2,11 +2,11 @@ import sys
 from pathlib import Path
 import logging
 
-from flask import Flask
+# from flask import Flask
 import numpy as np
 import pandas as pd
 import geopandas as gpd
-from dash import Dash, dcc, html, Input, Output, State, callback, dash_table
+from dash import Dash, dcc, html#, Input, Output, State, callback, dash_table
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
@@ -24,8 +24,8 @@ sys.path.append(str(dashapp_rootdir))
 # set up logging:
 logging.basicConfig(
     level=logging.DEBUG,
-    filename="elternsein.log",
-    filemode="a",
+    filename="logs/elternsein.log",
+    filemode="w",
 )
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 root_logger = logging.getLogger()
@@ -527,7 +527,9 @@ def init_dashboard(flask_app, route):
                     dbc.Row(
                         [
                             dbc.Col(
-                                [fig_map_bezdauer],
+                                [
+                                    fig_map_bezdauer
+                                ],
                                 xs={"size": 12},
                                 lg={"size": 10, "offset": 1},
                             ),
