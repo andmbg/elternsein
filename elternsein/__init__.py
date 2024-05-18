@@ -2,16 +2,16 @@ import sys
 from pathlib import Path
 import logging
 
-from flask import Flask
-import numpy as np
+# from flask import Flask
+# import numpy as np
 import pandas as pd
-import geopandas as gpd
-from dash import Dash, dcc, html, Input, Output, State, callback, dash_table
+# import geopandas as gpd
+from dash import Dash, dcc, html#, Input, Output, State, callback, dash_table
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
-import matplotlib.pyplot as plt
-import base64
-from io import BytesIO
+# import matplotlib.pyplot as plt
+# import base64
+# from io import BytesIO
 
 # from data.sources import destatis_sources, bkg_source
 from .colors import color_rgba
