@@ -351,7 +351,7 @@ def init_dashboard(flask_app, route):
                         [
                             dbc.Col(
                                 [
-                                    # fig_map_bezdauer
+                                    fig_map_bezdauer
                                 ],
                                 xs={"size": 12},
                                 lg={"size": 10, "offset": 1},
