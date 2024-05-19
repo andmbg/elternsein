@@ -468,6 +468,7 @@ def init_dashboard(flask_app, route):
                 style={"paddingTop": "50px"},
                 children=[
                     # dcc.Store(id="keystore", data=[]),
+                    
                     # births figure:
                     dbc.Row(
                         [
@@ -477,11 +478,9 @@ def init_dashboard(flask_app, route):
                                 lg={"size": 8, "offset": 2},
                             ),
                         ],
-                        style={
-                            "backgroundColor": "rgba(50,50,255, .1)",
-                            "paddingTop": "50px",
-                        },
+                        class_name="para mt-4",
                     ),
+                    
                     # Elterngeld figure:
                     dbc.Row(
                         [
@@ -491,11 +490,9 @@ def init_dashboard(flask_app, route):
                                 lg={"size": 8, "offset": 2},
                             ),
                         ],
-                        style={
-                            "backgroundColor": "rgba(50,50,255, .1)",
-                            "paddingTop": "50px",
-                        },
+                        class_name="para mt-4",
                     ),
+
                     # relative EG figure:
                     dbc.Row(
                         [
@@ -505,12 +502,11 @@ def init_dashboard(flask_app, route):
                                 lg={"size": 8, "offset": 2},
                             ),
                         ],
-                        style={
-                            "backgroundColor": "rgba(50,50,255, .1)",
-                            "paddingTop": "50px",
-                        },
+                        class_name="para mt-4",
                     ),
+
                     # map - how long parents got EG on average:
+                    # prose:
                     dbc.Row(
                         [
                             dbc.Col(
@@ -519,11 +515,9 @@ def init_dashboard(flask_app, route):
                                 lg={"size": 8, "offset": 2},
                             )
                         ],
-                        style={
-                            "backgroundColor": "rgba(50,50,255, .1)",
-                            "paddingTop": "50px",
-                        }
+                        class_name="para mt-4",
                     ),
+                    # figure:
                     dbc.Row(
                         [
                             dbc.Col(
@@ -534,12 +528,11 @@ def init_dashboard(flask_app, route):
                                 lg={"size": 10, "offset": 1},
                             ),
                         ],
-                        style={
-                            "backgroundColor": "rgba(50,50,255, .1)",
-                            "paddingTop": "50px",
-                        },
+                        class_name="para mt-1",
                     ),
+
                     # map - income tax across Germany:
+                    # prose:
                     dbc.Row(
                         [
                             dbc.Col(
@@ -548,11 +541,9 @@ def init_dashboard(flask_app, route):
                                 lg={"size": 8, "offset": 2},
                             )
                         ],
-                        style={
-                            "backgroundColor": "rgba(50,50,255, .1)",
-                            "paddingTop": "50px",
-                        }
+                        class_name="para mt-4",
                     ),
+                    # figure:
                     dbc.Row(
                         [
                             dbc.Col(
@@ -561,12 +552,11 @@ def init_dashboard(flask_app, route):
                                 lg={"size": 8, "offset": 2},
                             ),
                         ],
-                        style={
-                            "backgroundColor": "rgba(50,50,255, .1)",
-                            "paddingTop": "50px",
-                        },
+                        class_name="para mt-1",
                     ),
+
                     # taxes versus months of EG support:
+                    # prose:
                     dbc.Row(
                         [
                             dbc.Col(
@@ -575,11 +565,9 @@ def init_dashboard(flask_app, route):
                                 lg={"size": 8, "offset": 2},
                             )
                         ],
-                        style={
-                            "backgroundColor": "rgba(50,50,255, .1)",
-                            "paddingTop": "50px",
-                        }
+                        class_name="para mt-4",
                     ),
+                    # figure:
                     dbc.Row(
                         [
                             dbc.Col(
@@ -588,10 +576,7 @@ def init_dashboard(flask_app, route):
                                 lg={"size": 8, "offset": 2},
                             ),
                         ],
-                        style={
-                            "backgroundColor": "rgba(50,50,255, .1)",
-                            "paddingTop": "50px",
-                        },
+                        class_name="para mt-1",
                     ),
                 ],
             )
