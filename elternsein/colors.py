@@ -3,6 +3,26 @@ import re
 from colormath.color_objects import sRGBColor
 
 
+color_dict = {
+        'Schleswig-Holstein': '#1f77b4',
+        'Hamburg': '#ff7f0e',
+        'Niedersachsen': '#2ca02c',
+        'Bremen': '#d62728',
+        'Nordrhein-Westfalen': '#9467bd',
+        'Hessen': '#8c564b',
+        'Rheinland-Pfalz': '#e377c2',
+        'Baden-Württemberg': '#7f7f7f',
+        'Bayern': '#bcbd22',
+        'Saarland': '#17becf',
+        'Berlin': '#aec7e8',
+        'Brandenburg': '#ffbb78',
+        'Mecklenburg-Vorpommern': '#98df8a',
+        'Sachsen': '#ff9896',
+        'Sachsen-Anhalt': '#c5b0d5',
+        'Thüringen': '#c49c94'
+    }
+
+
 def shift_color(css_color, saturation_factor=1.0, brightness_factor=1.0):
     # Convert CSS color to RGB
     r, g, b = int(css_color[1:3], 16), int(css_color[3:5], 16), int(css_color[5:7], 16)
