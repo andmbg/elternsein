@@ -288,9 +288,16 @@ def init_dashboard(flask_app, route):
 
     for ax in axs:
         ax.axis("off")
+        ax.patch.set_alpha(0)
+    
+    plot_map_bezdauer.patch.set_alpha(0)
 
     buf = BytesIO()
-    plot_map_bezdauer.savefig(buf, format="png")
+    plot_map_bezdauer.savefig(buf, format="png", transparent=True)
+
+    with open("testfig2.png", "wb") as file:
+        file.write(buf.getvalue())
+
     plot_map_bezdauer_data = base64.b64encode(buf.getbuffer()).decode("ascii")
     fig_map_bezdauer = f"data:image/png;base64,{plot_map_bezdauer_data}"
 
@@ -334,7 +341,7 @@ def init_dashboard(flask_app, route):
     ax.set_title("Steuerkraft 2019")
 
     buf = BytesIO()
-    plot_map_taxes.savefig(buf, format="png")
+    plot_map_taxes.savefig(buf, format="png", transparent=True)
     plot_map_taxes_data = "data:image/png;base64," + base64.b64encode(buf.getbuffer()).decode("ascii")
 
     fig_map_taxes = html.Img(src=plot_map_taxes_data, style={"width": "100%"})
