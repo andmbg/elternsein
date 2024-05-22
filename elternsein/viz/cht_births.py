@@ -1,5 +1,9 @@
+import sys
+from pathlib import Path
 import pandas as pd
 import plotly.graph_objects as go
+
+sys.path.append(Path(__file__).resolve().parents[1])
 
 from data.sources import destatis_sources
 
