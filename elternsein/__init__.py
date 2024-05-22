@@ -6,7 +6,7 @@ import logging
 import numpy as np
 import pandas as pd
 import geopandas as gpd
-from dash import Dash, dcc, html#, Input, Output, State, callback, dash_table
+from dash import Dash, dcc, html  # , Input, Output, State, callback, dash_table
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
@@ -30,6 +30,7 @@ logging.basicConfig(
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 root_logger = logging.getLogger()
 root_logger.handlers[0].setFormatter(formatter)
+
 
 def init_dashboard(flask_app, route):
 
@@ -67,28 +68,55 @@ def init_dashboard(flask_app, route):
     fig, ax = viz.map_steuern()
     buf = BytesIO()
     fig.savefig(buf, format="png", transparent=True)
-    taxes_bitmap = "data:image/png;base64," + base64.b64encode(buf.getbuffer()).decode("ascii")
+    taxes_bitmap = "data:image/png;base64," + base64.b64encode(buf.getbuffer()).decode(
+        "ascii"
+    )
     fig_map_taxes = html.Img(src=taxes_bitmap, style={"width": "100%"})
 
     # tax level vs. months of EG support
-    fig_taxes_egdauer = dcc.Graph(id="fig_taxes_egdauer", figure=viz.cht_krs_steuern_bezdauer())
-
+    fig_taxes_egdauer = dcc.Graph(
+        id="fig_taxes_egdauer", figure=viz.cht_krs_steuern_bezdauer()
+    )
 
     #
     # Prose
     # =========================================================================
-    with open(base_dir / "elternsein" / "prose" / "map_egdauer.md") as file:
-        prose_egdauer = file.read()
-    
-    with open(base_dir / "elternsein" / "prose" / "map_taxes.md") as file:
-        prose_taxes = file.read()
-    
-    with open(base_dir / "elternsein" / "prose" / "sct_egdauer_taxes.md") as file:
-        prose_taxes_egdauer = file.read()
+    with open(base_dir / "elternsein" / "prose" / "geburten.md") as file:
+        md_geburten = dcc.Markdown(file.read())
+
+    with open(base_dir / "elternsein" / "prose" / "eg_empf.md") as file:
+        md_eg_empf = dcc.Markdown(file.read())
+
+    with open(base_dir / "elternsein" / "prose" / "egb.md") as file:
+        md_egb = dcc.Markdown(file.read())
+
+    with open(base_dir / "elternsein" / "prose" / "eg_dauer.md") as file:
+        md_egdauer = dcc.Markdown(file.read())
+
+    with open(base_dir / "elternsein" / "prose" / "taxes.md") as file:
+        md_taxes = dcc.Markdown(file.read())
+
+    with open(base_dir / "elternsein" / "prose" / "taxes_egdauer.md") as file:
+        md_taxes_egdauer = dcc.Markdown(file.read())
 
     #
     # Layout
     # =========================================================================
+
+    # abbreviate stuff:
+    def para(content, class_name: str = "para mt-4"):
+        out = dbc.Row(
+            [
+                dbc.Col(
+                    [content],
+                    xs={"size": 12},
+                    lg={"size": 8, "offset": 2},
+                ),
+            ],
+            class_name=class_name,
+        )
+        return out
+
 
     app.layout = html.Div(
         [
@@ -96,116 +124,24 @@ def init_dashboard(flask_app, route):
                 style={"paddingTop": "50px"},
                 children=[
                     # dcc.Store(id="keystore", data=[]),
-                    
-                    # births figure:
-                    dbc.Row(
-                        [
-                            dbc.Col(
-                                [fig_gb],
-                                xs={"size": 12},
-                                lg={"size": 8, "offset": 2},
-                            ),
-                        ],
-                        class_name="para mt-4",
-                    ),
-                    
-                    # Elterngeld figure:
-                    dbc.Row(
-                        [
-                            dbc.Col(
-                                [fig_eg],
-                                xs={"size": 12},
-                                lg={"size": 8, "offset": 2},
-                            ),
-                        ],
-                        class_name="para mt-4",
-                    ),
-
-                    # relative EG figure:
-                    dbc.Row(
-                        [
-                            dbc.Col(
-                                [fig_egb],
-                                xs={"size": 12},
-                                lg={"size": 8, "offset": 2},
-                            ),
-                        ],
-                        class_name="para mt-4",
-                    ),
-
+                    # births
+                    para(md_geburten),
+                    para(fig_gb),
+                    # Elterngeld:
+                    para(md_eg_empf),
+                    para(fig_eg),
+                    # relative EG:
+                    para(md_egb),
+                    para(fig_egb),
                     # map - how long parents got EG on average:
-                    # prose:
-                    dbc.Row(
-                        [
-                            dbc.Col(
-                                dcc.Markdown(prose_egdauer),
-                                xs={"size": 12},
-                                lg={"size": 8, "offset": 2},
-                            )
-                        ],
-                        class_name="para mt-4",
-                    ),
-                    # figure:
-                    dbc.Row(
-                        [
-                            dbc.Col(
-                                [
-                                    fig_map_bezdauer
-                                ],
-                                xs={"size": 12},
-                                lg={"size": 10, "offset": 1},
-                            ),
-                        ],
-                        class_name="para mt-1",
-                    ),
-
+                    para(md_egdauer),
+                    para(fig_map_bezdauer),
                     # map - income tax across Germany:
-                    # prose:
-                    dbc.Row(
-                        [
-                            dbc.Col(
-                                dcc.Markdown(prose_taxes),
-                                xs={"size": 12},
-                                lg={"size": 8, "offset": 2},
-                            )
-                        ],
-                        class_name="para mt-4",
-                    ),
-                    # figure:
-                    dbc.Row(
-                        [
-                            dbc.Col(
-                                [fig_map_taxes],
-                                xs={"size": 12},
-                                lg={"size": 8, "offset": 2},
-                            ),
-                        ],
-                        class_name="para mt-1",
-                    ),
-
+                    para(md_taxes),
+                    para(fig_map_taxes),
                     # taxes versus months of EG support:
-                    # prose:
-                    dbc.Row(
-                        [
-                            dbc.Col(
-                                dcc.Markdown(prose_taxes_egdauer),
-                                xs={"size": 12},
-                                lg={"size": 8, "offset": 2},
-                            )
-                        ],
-                        class_name="para mt-4",
-                    ),
-                    # figure:
-                    dbc.Row(
-                        [
-                            dbc.Col(
-                                [fig_taxes_egdauer],
-                                xs={"size": 12},
-                                lg={"size": 8, "offset": 2},
-                            ),
-                        ],
-                        class_name="para mt-1",
-                    ),
+                    para(md_taxes_egdauer),
+                    para(fig_taxes_egdauer),
                 ],
             )
         ]

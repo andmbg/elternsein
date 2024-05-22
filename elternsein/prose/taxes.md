@@ -1,4 +1,6 @@
-# Pro-Kopf-Einkommenssteuer
+## Teil 2: Pro-Kopf-Einkommenssteuer
+
+Wir sehen uns an, wie das Steueraufkommen pro Kopf bundesweit variiert.
 
 Die folgende Karte zeigt das durchschnittliche Steueraufkommen bei Lohn- und Einkommenssteuer.
 
