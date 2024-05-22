@@ -1,11 +1,17 @@
-import pandas as pd
+import sys
 from pathlib import Path
+import pandas as pd
 import plotly.graph_objects as go
 
 from elternsein.utils import num, cuyo
 from elternsein.colors import color_rgba
 
-processed_dir = Path.cwd() / "data" / "processed"
+base_dir = Path(__file__).resolve().parents[2]
+sys.path.append(base_dir)
+
+from data.sources import destatis_sources
+
+processed_dir = base_dir / "data" / "processed"
 
 
 def cht_krs_steuern_bezdauer():

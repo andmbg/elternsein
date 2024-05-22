@@ -1,8 +1,14 @@
+import sys
+from pathlib import Path
 from matplotlib import pyplot as plt
 import pandas as pd
 import geopandas as gpd
 
+base_dir = Path(__file__).resolve().parents[2]
+sys.path.append(base_dir)
+
 from data.sources import destatis_sources, bkg_source
+
 
 def map_steuern():
     dfs = pd.read_parquet(destatis_sources["steuern"]["processed_file"])

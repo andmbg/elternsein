@@ -13,19 +13,18 @@ import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
 
+base_dir = Path(__file__).resolve().parents[1]
+sys.path.append(base_dir)
+
 # from data.sources import destatis_sources, bkg_source
 from .colors import color_rgba
 from .utils import cuyo, num
 from . import viz
 
-# import from config relatively, so it remains portable:
-dashapp_rootdir = Path(__file__).resolve().parents[1]
-sys.path.append(str(dashapp_rootdir))
-
 # set up logging:
 logging.basicConfig(
     level=logging.DEBUG,
-    filename="logs/elternsein.log",
+    filename=str(base_dir / "logs" / "elternsein.log"),
     filemode="w",
 )
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -78,13 +77,13 @@ def init_dashboard(flask_app, route):
     #
     # Prose
     # =========================================================================
-    with open(dashapp_rootdir / "elternsein" / "prose" / "map_egdauer.md") as file:
+    with open(base_dir / "elternsein" / "prose" / "map_egdauer.md") as file:
         prose_egdauer = file.read()
     
-    with open(dashapp_rootdir / "elternsein" / "prose" / "map_taxes.md") as file:
+    with open(base_dir / "elternsein" / "prose" / "map_taxes.md") as file:
         prose_taxes = file.read()
     
-    with open(dashapp_rootdir / "elternsein" / "prose" / "sct_egdauer_taxes.md") as file:
+    with open(base_dir / "elternsein" / "prose" / "sct_egdauer_taxes.md") as file:
         prose_taxes_egdauer = file.read()
 
     #
