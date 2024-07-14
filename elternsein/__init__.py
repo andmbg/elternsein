@@ -79,8 +79,11 @@ def init_dashboard(flask_app, route):
     )
 
     #
-    # Prose
+    # Contents
     # =========================================================================
+    with open(base_dir / "elternsein" / "prose" / "intro.md") as file:
+        md_intro = dcc.Markdown(file.read())
+    
     with open(base_dir / "elternsein" / "prose" / "geburten.md") as file:
         md_geburten = dcc.Markdown(file.read())
 
@@ -111,9 +114,22 @@ def init_dashboard(flask_app, route):
                     [content],
                     xs={"size": 12},
                     lg={"size": 8, "offset": 2},
+                    class_name=class_name,
                 ),
             ],
-            class_name=class_name,
+        )
+        return out
+    
+    def figure(content, class_name: str = "figure mt-4"):
+        out = dbc.Row(
+            [
+                dbc.Col(
+                    [content],
+                    xs={"size": 12},
+                    lg={"size": 10, "offset": 1},
+                    class_name=class_name,
+                ),
+            ],
         )
         return out
 
@@ -129,23 +145,24 @@ def init_dashboard(flask_app, route):
                         children=[
                             # dcc.Store(id="keystore", data=[]),
                             # births
+                            para(md_intro),
                             para(md_geburten),
-                            para(fig_gb, class_name="figure mt-4"),
+                            figure(fig_gb, class_name="figure mt-4"),
                             # Elterngeld:
                             para(md_eg_empf),
-                            para(fig_eg, class_name="figure mt-4"),
+                            figure(fig_eg, class_name="figure mt-4"),
                             # relative EG:
                             para(md_egb),
-                            para(fig_egb, class_name="figure mt-4"),
+                            figure(fig_egb, class_name="figure mt-4"),
                             # map - how long parents got EG on average:
                             para(md_egdauer),
-                            para(fig_map_bezdauer, class_name="figure mt-4"),
+                            figure(fig_map_bezdauer, class_name="figure mt-4"),
                             # map - income tax across Germany:
                             para(md_taxes),
-                            para(fig_map_taxes, class_name="figure mt-4"),
+                            figure(fig_map_taxes, class_name="figure mt-4"),
                             # taxes versus months of EG support:
                             para(md_taxes_egdauer),
-                            para(fig_taxes_egdauer, class_name="figure mt-4"),
+                            figure(fig_taxes_egdauer, class_name="figure mt-4"),
                         ],
                     )
                 ],
