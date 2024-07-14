@@ -117,33 +117,38 @@ def init_dashboard(flask_app, route):
         )
         return out
 
-
     app.layout = html.Div(
         [
-            dbc.Container(
-                style={"paddingTop": "50px"},
+            html.Div(className="background-fixed"),
+            html.Div(
+                className="container",
                 children=[
-                    # dcc.Store(id="keystore", data=[]),
-                    # births
-                    para(md_geburten),
-                    para(fig_gb),
-                    # Elterngeld:
-                    para(md_eg_empf),
-                    para(fig_eg),
-                    # relative EG:
-                    para(md_egb),
-                    para(fig_egb),
-                    # map - how long parents got EG on average:
-                    para(md_egdauer),
-                    para(fig_map_bezdauer),
-                    # map - income tax across Germany:
-                    para(md_taxes),
-                    para(fig_map_taxes),
-                    # taxes versus months of EG support:
-                    para(md_taxes_egdauer),
-                    para(fig_taxes_egdauer),
+                    dbc.Container(
+                        style={"paddingTop": "50px"},
+                        children=[
+                            # dcc.Store(id="keystore", data=[]),
+                            # births
+                            para(md_geburten),
+                            para(fig_gb),
+                            # Elterngeld:
+                            para(md_eg_empf),
+                            para(fig_eg),
+                            # relative EG:
+                            para(md_egb),
+                            para(fig_egb),
+                            # map - how long parents got EG on average:
+                            para(md_egdauer),
+                            para(fig_map_bezdauer),
+                            # map - income tax across Germany:
+                            para(md_taxes),
+                            para(fig_map_taxes),
+                            # taxes versus months of EG support:
+                            para(md_taxes_egdauer),
+                            para(fig_taxes_egdauer),
+                        ],
+                    )
                 ],
-            )
+            ),
         ]
     )
 
