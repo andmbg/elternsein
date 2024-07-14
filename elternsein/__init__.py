@@ -117,6 +117,7 @@ def init_dashboard(flask_app, route):
         )
         return out
 
+
     app.layout = html.Div(
         [
             html.Div(className="background-fixed"),
@@ -129,22 +130,22 @@ def init_dashboard(flask_app, route):
                             # dcc.Store(id="keystore", data=[]),
                             # births
                             para(md_geburten),
-                            para(fig_gb),
+                            para(fig_gb, class_name="figure mt-4"),
                             # Elterngeld:
                             para(md_eg_empf),
-                            para(fig_eg),
+                            para(fig_eg, class_name="figure mt-4"),
                             # relative EG:
                             para(md_egb),
-                            para(fig_egb),
+                            para(fig_egb, class_name="figure mt-4"),
                             # map - how long parents got EG on average:
                             para(md_egdauer),
-                            para(fig_map_bezdauer),
+                            para(fig_map_bezdauer, class_name="figure mt-4"),
                             # map - income tax across Germany:
                             para(md_taxes),
-                            para(fig_map_taxes),
+                            para(fig_map_taxes, class_name="figure mt-4"),
                             # taxes versus months of EG support:
                             para(md_taxes_egdauer),
-                            para(fig_taxes_egdauer),
+                            para(fig_taxes_egdauer, class_name="figure mt-4"),
                         ],
                     )
                 ],
