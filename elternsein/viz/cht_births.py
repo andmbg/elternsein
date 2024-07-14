@@ -35,7 +35,7 @@ def cht_births():
         height=800,
         margin=dict(t=20, r=20, b=20, l=20),
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(255,255,255, .7)",
+        plot_bgcolor="rgba(255,255,255, 0)",
     )
 
     return fig

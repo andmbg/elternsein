@@ -96,6 +96,8 @@ def cht_eg_births():
         )
 
     fig.update_layout(
+        paper_bgcolor="rgba(255,255,255, 0)",
+        plot_bgcolor="rgba(255,255,255, 0)",
         hovermode="x unified",
         # width=1000,
         height=800,

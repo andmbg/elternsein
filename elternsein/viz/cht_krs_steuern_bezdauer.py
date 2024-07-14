@@ -94,7 +94,8 @@ def cht_krs_steuern_bezdauer():
     yticks = list(range(23))
 
     fig.update_layout(
-        plot_bgcolor="rgba(0,0,0, .05)",
+        paper_bgcolor="rgba(255,255,255, 0)",
+        plot_bgcolor="rgba(255,255,255, 0)",
         # width=800,
         height=600,
         margin=dict(t=50, r=10, b=20, l=50),
