@@ -79,7 +79,7 @@ def cht_eg():
 
     fig.update_layout(
         hovermode="x unified",
-        width=1000,
+        # width=1000,
         height=550,
         margin=dict(t=50, r=20, b=20, l=20),
         yaxis=dict(

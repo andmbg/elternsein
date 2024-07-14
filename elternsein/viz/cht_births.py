@@ -31,7 +31,7 @@ def cht_births():
         )
 
     fig.update_layout(
-        width=1000,
+        # width=1000,
         height=800,
         margin=dict(t=20, r=20, b=20, l=20),
         paper_bgcolor="rgba(0,0,0,0)",

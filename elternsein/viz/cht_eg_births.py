@@ -97,7 +97,7 @@ def cht_eg_births():
 
     fig.update_layout(
         hovermode="x unified",
-        width=1000,
+        # width=1000,
         height=800,
         margin=dict(t=20, r=20, b=20, l=20),
         yaxis=dict(range=[0, egb.eg_rate.max()])
