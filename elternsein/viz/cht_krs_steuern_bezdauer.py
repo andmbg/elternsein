@@ -3,14 +3,11 @@ from pathlib import Path
 import pandas as pd
 import plotly.graph_objects as go
 
-from elternsein.utils import num, cuyo
-from elternsein.colors import color_rgba
+from ...elternsein.utils import num, cuyo
+from ...elternsein.colors import color_rgba
 
 base_dir = Path(__file__).resolve().parents[2]
 sys.path.append(base_dir)
-
-from data.sources import destatis_sources
-
 processed_dir = base_dir / "data" / "processed"
 
 

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from logindata import (
+from ..logindata import (
     destatis_login,
     destatis_password,
     regiostat_login,

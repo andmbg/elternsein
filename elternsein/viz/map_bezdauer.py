@@ -5,10 +5,7 @@ import pandas as pd
 import geopandas as gpd
 import numpy as np
 
-base_dir = Path(__file__).resolve().parents[2]
-sys.path.append(base_dir)
-
-from data.sources import destatis_sources, bkg_source
+from ...data.sources import destatis_sources, bkg_source
 
 
 def map_bezdauer():
