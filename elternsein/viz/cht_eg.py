@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 base_dir = Path(__file__).resolve().parents[2]
 sys.path.append(base_dir)
 
-from data.sources import destatis_sources
+from ...data.sources import destatis_sources
 
 
 def cht_eg():
