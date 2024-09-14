@@ -8,6 +8,7 @@ base_dir = Path(__file__).resolve().parents[2]
 sys.path.append(base_dir)
 
 from data.sources import destatis_sources, bkg_source
+from elternsein.i18n import translate_series, translate as t
 
 
 def map_steuern():
@@ -39,6 +40,6 @@ def map_steuern():
     )
 
     ax.axis("off")
-    ax.set_title("Steuerkraft 2019")
+    ax.set_title(t("Steuerkraft") + "2019")
 
     return fig, ax

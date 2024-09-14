@@ -9,10 +9,13 @@ base_dir = Path(__file__).resolve().parents[2]
 sys.path.append(base_dir)
 
 from data.sources import destatis_sources, bkg_source
+from elternsein.i18n import translate_series, translate as t
 
 
 def map_bezdauer():
     eg = pd.read_parquet(destatis_sources["eg_dauer"]["processed_file"])
+    eg.fm = eg.fm.replace({"weiblich": t("weiblich"), "männlich": t("männlich"), "Insgesamt": t("Insgesamt")})
+
     gdf = gpd.read_parquet(bkg_source["processed_file"])
 
     df = gpd.GeoDataFrame(
@@ -42,6 +45,7 @@ def map_bezdauer():
 
     facet_var = "fm"
     facets = df_plot[facet_var].unique()
+    print(df_plot)
 
     cols = np.array([0, 1, 2])
     subpltcoord = cols

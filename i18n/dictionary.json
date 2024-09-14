@@ -1,0 +1,203 @@
+{
+    "lorem": {
+        "EN-GB": "ipsum"
+    },
+    "# Elterngeld: Basisdaten von destatis\n\nHier führen wir einige Grunddaten ein, die bei destatis verfügbar sind.\n\"Verfügbar\" heißt, die können auf den [Seiten von destatis](www.destatis.de) gefunden werden, oder über die [API](https://www-genesis.destatis.de/genesisWS/rest/2020/) bezogen werden.\nDer Code in diesem Projekt tut letzteres, so dass automatisiert stets die neuesten Daten vorliegen.\n": {
+        "EN-GB": "# Parental allowance: Basic data from destatis\n\nHere we introduce some basic data that is available from destatis.\n\"Available\" means that they can be found on the [pages of destatis](www.destatis.de) or obtained via the [API](https://www-genesis.destatis.de/genesisWS/rest/2020/).\nThe code in this project does the latter, so that the latest data is always available automatically.\n"
+    },
+    "## Geburten\n\nDie Zahl der Geburten *(destatis: 12612-0100)* dient als Grundlage, ohne die Schwankungen beim Elterngeldbezug nicht zu verstehen sind.\nDa die Spanne zwischen Bremen und NRW sehr groß ist und wir uns mehr für Unterschiede in den relativen Geburtenraten zwischen Ländern und über die Jahre hinweg interessieren, skalieren wir die Geburtenrate auf \"Geburten je 100.000 Einwohner:innen\", ziehen also noch die Einwohnerzahlen heran *(destatis: 12411-0010)*.\nDie Tabelle enthält auch das Geschlecht des Kindes, das ignorieren wir hier.\n": {
+        "EN-GB": "## Births\n\nThe number of births *(destatis: 12612-0100)* serves as a basis without which fluctuations in parental benefit receipt cannot be understood.\nSince the range between Bremen and NRW is very large and we are more interested in differences in the relative birth rates between federal states and over the years, we scale the birth rate to \"births per 100,000 inhabitants\", i.e. we still use the population figures *(destatis: 12411-0010)*.\nThe table also contains the sex of the child, which we ignore here.\n"
+    },
+    "Interessant ist hier einmal die Trendumkehr 2016 und wie 2021/22 in den alten Bundesländern die Zahl wieder steigt, aber in den neuen sich der Abwärtstrend nicht umkehrt.\nMöglicherweise gibt es Geschlechterunterschiede in Wanderungsbewegungen?\nDie Geburtenrate pro Mutter wäre interessant.\n\n## Empfänger:innen von Elterngeld\n\nDie Daten für die Anzahl der Empfangenden von Elterngeld *(destatis: 22922-0025)* sind zeitlich auf Quartalsebene aufgelöst.\nDas ist einerseits besser als Jahresdaten, andererseits gibt es starke saisonale Effekte.\nDie lenken von längerfristigen Trends ab, daher aggregieren wir pro Jahr.\nDer Nachteil: Wir verlieren das letzte Jahr, wenn dort nicht vier Quartale geliefert werden, denn sonst ist die Jahressumme für dieses Jahr natürlich weit unter dem Vorjahr.\n": {
+        "EN-GB": "What is interesting here is the trend reversal in 2016 and how the number is rising again in the old federal states in 2021/22, but the downward trend is not reversed in the new federal states.\nCould there be gender differences in migration movements?\nThe birth rate per mother would be interesting.\n\n## Recipients of parental allowance\n\nThe data for the number of recipients of parental allowance *(destatis: 22922-0025)* are temporally resolved at quarterly level.\nOn the one hand, this is better than annual data; on the other hand, there are strong seasonal effects.\nThese distract from longer-term trends, which is why we aggregate per year.\nThe disadvantage is that we lose the last year if four quarters are not provided, because otherwise the annual total for this year is of course far below the previous year.\n"
+    },
+    "# Empfänger:innen von Elterngeld in Prozent Anteil an Geburten\n\nWir kennen nun die Zahlen für die Geburten und für die absolute Anzahl von Elterngeldempfänger:innen.\nSetzen wir sie in Beziehung: Wieviel Prozent der Mütter und Väter haben Elterngeld empfangen?\n": {
+        "EN-GB": "# Recipients of parental allowance in per cent Share of births\n\nWe now know the figures for births and for the absolute number of parental allowance recipients.\nLet's put them in relation: What percentage of mothers and fathers have received parental allowance?\n"
+    },
+    "# Die Steuerkraft der Regionen und die Bezugsdauer beim Elterngeld\n\nFür die etwa 400 Kreise in Deutschland haben wir einerseits Daten darüber, wie viele Steuern auf wieviel Einkommen bezahlt werden *(Regionalstatistik: 73111-01-01-4)*.\nZusammen mit der Einwohnerzahl *(destatis: 12411-0010)* ergibt sich die pro-Kopf-Steuerkraft.\n\n## Teil 1: Dauer des Bezugs als Karte\n\nZudem haben wir auf Kreisebene Daten zur durchschnittlichen Dauer des Elterngeldbezugs *(destatis: 2292-0125)*.\nWir sehen uns bundesweit an, wie die relativen Unterschiede in der Bezugsdauer auf Kreisebene aussehen, und zwar für Mütter und Väter getrennt, sowie den Mittelwert.\n\nWichtig: Wenn gezeigt ist, wie lang Mütter und Väter jeweils im Durchschnitt Elterngeld beziehen, ist trotzdem noch zu beachten, dass die *Zahl* der Mütter deutlich höher ist als die der Väter, die Elterngeld beantragen.\nIm Prinzip könnte man diese Zahlen zur Dauer multiplizieren mit denen zur Anzahl der EG-empfangenden Mütter und Väter und hätte so einen Eindruck davon, wie stark doch die Rolle der Mütter vorherrschend ist.\n\n**TODO**: *Derzeit ist hier nur der aktuellste Wert. Slider oder Dropdown mit Jahreszahl. Dropdown mit der Option \"mit vs. ohne Elterngeld Plus\"*\n": {
+        "EN-GB": "# The fiscal strength of the regions and the duration of parental allowance\n\nFor the approximately 400 districts in Germany, we have data on how much tax is paid on how much income *(regional statistics: 73111-01-01-4)*.\nTogether with the number of inhabitants *(destatis: 12411-0010)*, this results in the per capita tax capacity.\n\n## Part 1: Duration of support as a map\n\nWe also have data at district level on the average duration of parental allowance receipt *(destatis: 2292-0125)*.\nWe take a nationwide look at the relative differences in the duration of receipt at district level, separately for mothers and fathers, as well as the mean value.\n\nImportant: If it is shown how long mothers and fathers receive parental allowance on average, it should still be noted that the *number* of mothers is significantly higher than that of fathers who apply for parental allowance.\nIn principle, you could multiply these figures on duration by the number of mothers and fathers receiving parental allowance to get an idea of the predominant role played by mothers.\n\n**TODO**: *Currently only the most recent value is shown here. Slider or dropdown with year. Dropdown with the option \"with vs. without parental allowance plus \"*.\n"
+    },
+    "## Teil 2: Pro-Kopf-Einkommenssteuer\n\nWir sehen uns an, wie das Steueraufkommen pro Kopf bundesweit variiert.\n\nDie folgende Karte zeigt das durchschnittliche Steueraufkommen bei Lohn- und Einkommenssteuer.\n\n**TODO**: *Jahr wählbar machen. Vielleicht auch gleich verbinden mit den Karten darüber, dass immer alle das gleiche Jahr zeigen.*\n": {
+        "EN-GB": "## Part 2: Per capita income tax\n\nWe look at how tax revenue per capita varies across the country.\n\nThe following map shows the average tax revenue for wage and income tax.\n\n**TODO**: *Make year selectable. Perhaps also combine it with the maps about always showing the same year.\n"
+    },
+    "# Teil 3: Steuerkraft und Bezugsdauer beim Elterngeld\n\nNun setzen wir beide Größen in Bezug.\n": {
+        "EN-GB": "# Part 3: Tax capacity and period of entitlement to parental allowance\n\nNow let's relate the two variables.\n"
+    },
+    "Schleswig-Holstein": {
+        "EN-GB": "Schleswig-Holstein"
+    },
+    "Hamburg": {
+        "EN-GB": "Hamburg"
+    },
+    "Niedersachsen": {
+        "EN-GB": "Lower Saxony"
+    },
+    "Bremen": {
+        "EN-GB": "Bremen"
+    },
+    "Nordrhein-Westfalen": {
+        "EN-GB": "North Rhine-Westphalia"
+    },
+    "Hessen": {
+        "EN-GB": "Hesse"
+    },
+    "Rheinland-Pfalz": {
+        "EN-GB": "Rhineland-Palatinate"
+    },
+    "Baden-Württemberg": {
+        "EN-GB": "Baden-Württemberg"
+    },
+    "Bayern": {
+        "EN-GB": "Bavaria"
+    },
+    "Saarland": {
+        "EN-GB": "Saarland"
+    },
+    "Berlin": {
+        "EN-GB": "Berlin"
+    },
+    "Brandenburg": {
+        "EN-GB": "Brandenburg"
+    },
+    "Mecklenburg-Vorpommern": {
+        "EN-GB": "Mecklenburg-Western Pomerania"
+    },
+    "Sachsen": {
+        "EN-GB": "Saxony"
+    },
+    "Sachsen-Anhalt": {
+        "EN-GB": "Saxony-Anhalt"
+    },
+    "Thüringen": {
+        "EN-GB": "Thuringia"
+    },
+    "Väter": {
+        "EN-GB": "Fathers"
+    },
+    "Mütter": {
+        "EN-GB": "Mothers"
+    },
+    "Mütter in Baden-Württemberg": {
+        "EN-GB": "Mothers in Baden-Württemberg"
+    },
+    "Väter in Baden-Württemberg": {
+        "EN-GB": "Fathers in Baden-Württemberg"
+    },
+    "Mütter in Bayern": {
+        "EN-GB": "Mothers in Bavaria"
+    },
+    "Väter in Bayern": {
+        "EN-GB": "Fathers in Bavaria"
+    },
+    "Mütter in Berlin": {
+        "EN-GB": "Mothers in Berlin"
+    },
+    "Väter in Berlin": {
+        "EN-GB": "Fathers in Berlin"
+    },
+    "Mütter in Brandenburg": {
+        "EN-GB": "Mothers in Brandenburg"
+    },
+    "Väter in Brandenburg": {
+        "EN-GB": "Fathers in Brandenburg"
+    },
+    "Mütter in Bremen": {
+        "EN-GB": "Mothers in Bremen"
+    },
+    "Väter in Bremen": {
+        "EN-GB": "Fathers in Bremen"
+    },
+    "Mütter in Hamburg": {
+        "EN-GB": "Mothers in Hamburg"
+    },
+    "Väter in Hamburg": {
+        "EN-GB": "Fathers in Hamburg"
+    },
+    "Mütter in Hessen": {
+        "EN-GB": "Mothers in Hesse"
+    },
+    "Väter in Hessen": {
+        "EN-GB": "Fathers in Hesse"
+    },
+    "Mütter in Mecklenburg-Vorpommern": {
+        "EN-GB": "Mothers in Mecklenburg-Western Pomerania"
+    },
+    "Väter in Mecklenburg-Vorpommern": {
+        "EN-GB": "Fathers in Mecklenburg-Western Pomerania"
+    },
+    "Mütter in Niedersachsen": {
+        "EN-GB": "Mothers in Lower Saxony"
+    },
+    "Väter in Niedersachsen": {
+        "EN-GB": "Fathers in Lower Saxony"
+    },
+    "Mütter in Nordrhein-Westfalen": {
+        "EN-GB": "Mothers in North Rhine-Westphalia"
+    },
+    "Väter in Nordrhein-Westfalen": {
+        "EN-GB": "Fathers in North Rhine-Westphalia"
+    },
+    "Mütter in Rheinland-Pfalz": {
+        "EN-GB": "Mothers in Rhineland-Palatinate"
+    },
+    "Väter in Rheinland-Pfalz": {
+        "EN-GB": "Fathers in Rhineland-Palatinate"
+    },
+    "Mütter in Saarland": {
+        "EN-GB": "Mothers in Saarland"
+    },
+    "Väter in Saarland": {
+        "EN-GB": "Fathers in Saarland"
+    },
+    "Mütter in Sachsen": {
+        "EN-GB": "Mothers in Saxony"
+    },
+    "Väter in Sachsen": {
+        "EN-GB": "Fathers in Saxony"
+    },
+    "Mütter in Sachsen-Anhalt": {
+        "EN-GB": "Mothers in Saxony-Anhalt"
+    },
+    "Väter in Sachsen-Anhalt": {
+        "EN-GB": "Fathers in Saxony-Anhalt"
+    },
+    "Mütter in Schleswig-Holstein": {
+        "EN-GB": "Mothers in Schleswig-Holstein"
+    },
+    "Väter in Schleswig-Holstein": {
+        "EN-GB": "Fathers in Schleswig-Holstein"
+    },
+    "Mütter in Thüringen": {
+        "EN-GB": "Mothers in Thuringia"
+    },
+    "Väter in Thüringen": {
+        "EN-GB": "Fathers in Thuringia"
+    },
+    "%{customdata}: ": {
+        "EN-GB": "%{customdata}:"
+    },
+    "bei %{y:.1f}% der geborenen Kinder<extra></extra>": {
+        "EN-GB": "%{y:.1f}% of the children born here<extra></extra>"
+    },
+    "%{customdata}": {
+        "EN-GB": "%{customdata}"
+    },
+    "weiblich": {
+        "EN-GB": "Female"
+    },
+    "männlich": {
+        "EN-GB": "Male"
+    },
+    "Insgesamt": {
+        "EN-GB": "Total"
+    },
+    "Steuerkraft": {
+        "EN-GB": "Fiscal strength"
+    },
+    "West": {
+        "EN-GB": "West"
+    },
+    "Ost": {
+        "EN-GB": "East"
+    }
+}

@@ -1,25 +1,21 @@
+from io import BytesIO
 import sys
 from pathlib import Path
+import base64
 import logging
 
 # from flask import Flask
-import numpy as np
-import pandas as pd
-import geopandas as gpd
 from dash import Dash, dcc, html  # , Input, Output, State, callback, dash_table
 import dash_bootstrap_components as dbc
-import plotly.graph_objects as go
-import matplotlib.pyplot as plt
-import base64
-from io import BytesIO
 
 base_dir = Path(__file__).resolve().parents[1]
 sys.path.append(base_dir)
 
 # from data.sources import destatis_sources, bkg_source
-from .colors import color_rgba
-from .utils import cuyo, num
 from . import viz
+from .config import current_language
+from .language_context import language_context
+from .i18n import translate as t
 
 # set up logging:
 logging.basicConfig(
@@ -33,6 +29,8 @@ root_logger.handlers[0].setFormatter(formatter)
 
 
 def init_dashboard(flask_app, route):
+
+    language_context.set_language(current_language)
 
     app = Dash(
         __name__,
@@ -82,25 +80,25 @@ def init_dashboard(flask_app, route):
     # Contents
     # =========================================================================
     with open(base_dir / "elternsein" / "prose" / "intro.md") as file:
-        md_intro = dcc.Markdown(file.read())
+        md_intro = dcc.Markdown(t(file.read()))
     
     with open(base_dir / "elternsein" / "prose" / "geburten.md") as file:
-        md_geburten = dcc.Markdown(file.read())
+        md_geburten = dcc.Markdown(t(file.read()))
 
     with open(base_dir / "elternsein" / "prose" / "eg_empf.md") as file:
-        md_eg_empf = dcc.Markdown(file.read())
+        md_eg_empf = dcc.Markdown(t(file.read()))
 
     with open(base_dir / "elternsein" / "prose" / "egb.md") as file:
-        md_egb = dcc.Markdown(file.read())
+        md_egb = dcc.Markdown(t(file.read()))
 
     with open(base_dir / "elternsein" / "prose" / "eg_dauer.md") as file:
-        md_egdauer = dcc.Markdown(file.read())
+        md_egdauer = dcc.Markdown(t(file.read()))
 
     with open(base_dir / "elternsein" / "prose" / "taxes.md") as file:
-        md_taxes = dcc.Markdown(file.read())
+        md_taxes = dcc.Markdown(t(file.read()))
 
     with open(base_dir / "elternsein" / "prose" / "taxes_egdauer.md") as file:
-        md_taxes_egdauer = dcc.Markdown(file.read())
+        md_taxes_egdauer = dcc.Markdown(t(file.read()))
 
     #
     # Layout

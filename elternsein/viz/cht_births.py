@@ -7,9 +7,11 @@ base_dir = Path(__file__).resolve().parents[2]
 sys.path.append(base_dir)
 
 from data.sources import destatis_sources
+from ..i18n import translate_series
 
 
 def cht_births():
+
     gb = pd.read_parquet(destatis_sources["geburten"]["processed_file"])
     gb = gb.groupby(["jahr", "land"]).geburten.sum().to_frame().reset_index()
 
@@ -17,6 +19,9 @@ def cht_births():
 
     gb = pd.merge(gb, ewz, on=["jahr", "land"])
     gb["geburten_pro_1000"] = gb.geburten / gb.ewz * 1000
+
+    # i18n:
+    gb["land"] = translate_series(gb.land)
 
     fig = go.Figure()
 

@@ -5,6 +5,7 @@ import plotly.graph_objects as go
 
 from elternsein.utils import num, cuyo
 from elternsein.colors import color_rgba
+from elternsein.i18n import translate as t
 
 base_dir = Path(__file__).resolve().parents[2]
 sys.path.append(base_dir)
@@ -28,7 +29,7 @@ def cht_krs_steuern_bezdauer():
     df = df.sort_values(["jahr", "ags"]).reset_index(drop=True)
 
     # die Ost-West-Markierung:
-    df["ostwest"] = df.ags.apply(lambda x: "Ost" if int(x[0:2]) > 10 else "West")
+    df["ostwest"] = df.ags.apply(lambda x: t("Ost") if int(x[0:2]) > 10 else t("West"))
 
     # auf ein Jahr festlegen:
     df = df.loc[
@@ -39,8 +40,8 @@ def cht_krs_steuern_bezdauer():
 
     # Farben:
     colormap = {
-        "Ost": "#ff0000",
-        "West": "#66ccff",
+        t("Ost"): "#ff0000",
+        t("West"): "#66ccff",
     }
 
     fig = go.Figure()

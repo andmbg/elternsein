@@ -7,12 +7,14 @@ base_dir = Path(__file__).resolve().parents[2]
 sys.path.append(base_dir)
 
 from data.sources import destatis_sources
+from elternsein.i18n import translate_series, translate as t
 
 
 def cht_eg():
 
     eg = pd.read_parquet(destatis_sources["eg_empf"]["processed_file"])
     eg = eg.reset_index(drop=True)
+    eg.land = translate_series(eg.land)
 
     lastyear = eg.jahr.max()
     entries_lastyear = eg[["jahr"]].value_counts().sort_index().iloc[-1]
@@ -27,28 +29,28 @@ def cht_eg():
     eg = eg.groupby(["jahr", "land", "fm", "art"]).sum().drop("quartal", axis=1).reset_index()
 
     eg["grp_display"] = eg.apply(
-        lambda row: f"{'Mütter' if row.fm=='weiblich' else 'Väter'} in {row.land}",
+        lambda row: f"{t('Mütter') if row.fm=='weiblich' else t('Väter')} in {row.land}",
         axis=1
     )
 
     eg = eg.sort_values(by=["jahr", "land", "fm"], ascending=[True, True, False]).reset_index(drop=True)
     land_clr = {
-        'Schleswig-Holstein': '#1f77b4',
-        'Hamburg': '#ff7f0e',
-        'Niedersachsen': '#2ca02c',
-        'Bremen': '#d62728',
-        'Nordrhein-Westfalen': '#9467bd',
-        'Hessen': '#8c564b',
-        'Rheinland-Pfalz': '#e377c2',
-        'Baden-Württemberg': '#7f7f7f',
-        'Bayern': '#bcbd22',
-        'Saarland': '#17becf',
-        'Berlin': '#aec7e8',
-        'Brandenburg': '#ffbb78',
-        'Mecklenburg-Vorpommern': '#98df8a',
-        'Sachsen': '#ff9896',
-        'Sachsen-Anhalt': '#c5b0d5',
-        'Thüringen': '#c49c94',
+        t('Schleswig-Holstein'): '#1f77b4',
+        t('Hamburg'): '#ff7f0e',
+        t('Niedersachsen'): '#2ca02c',
+        t('Bremen'): '#d62728',
+        t('Nordrhein-Westfalen'): '#9467bd',
+        t('Hessen'): '#8c564b',
+        t('Rheinland-Pfalz'): '#e377c2',
+        t('Baden-Württemberg'): '#7f7f7f',
+        t('Bayern'): '#bcbd22',
+        t('Saarland'): '#17becf',
+        t('Berlin'): '#aec7e8',
+        t('Brandenburg'): '#ffbb78',
+        t('Mecklenburg-Vorpommern'): '#98df8a',
+        t('Sachsen'): '#ff9896',
+        t('Sachsen-Anhalt'): '#c5b0d5',
+        t('Thüringen'): '#c49c94',
     }
 
     fm_line = {
