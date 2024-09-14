@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 
 from elternsein.utils import num, cuyo
 from elternsein.colors import color_rgba
-from elternsein.i18n import translate as t
+from ..i18n import translate as t
 
 base_dir = Path(__file__).resolve().parents[2]
 sys.path.append(str(base_dir))
