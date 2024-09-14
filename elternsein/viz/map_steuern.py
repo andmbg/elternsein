@@ -4,8 +4,8 @@ from matplotlib import pyplot as plt
 import pandas as pd
 import geopandas as gpd
 
-# base_dir = Path(__file__).resolve().parents[2]
-# sys.path.append(base_dir)
+base_dir = Path(__file__).resolve().parents[2]
+sys.path.append(str(base_dir))
 
 from data.sources import destatis_sources, bkg_source
 from ..i18n import translate_series, translate as t

@@ -8,9 +8,9 @@ from elternsein.colors import color_rgba
 from elternsein.i18n import translate as t
 
 base_dir = Path(__file__).resolve().parents[2]
-# sys.path.append(base_dir)
+sys.path.append(str(base_dir))
 
-from data.sources import destatis_sources
+# from ...data.sources import destatis_sources
 
 processed_dir = base_dir / "data" / "processed"
 
