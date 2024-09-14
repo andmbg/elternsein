@@ -3,11 +3,11 @@ from pathlib import Path
 import pandas as pd
 import plotly.graph_objects as go
 
-base_dir = Path(__file__).resolve().parents[2]
-sys.path.append(base_dir)
+# base_dir = Path(__file__).resolve().parents[2]
+# sys.path.append(base_dir)
 
 from data.sources import destatis_sources
-from elternsein.i18n import translate_series, translate as t
+from ..i18n import translate_series, translate as t
 
 
 def cht_eg():
