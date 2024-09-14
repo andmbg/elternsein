@@ -199,5 +199,11 @@
     },
     "Ost": {
         "EN-GB": "East"
+    },
+    "durchschnittlich": {
+        "EN-GB": "on average"
+    },
+    "Monate Elterngeld": {
+        "EN-GB": "months parental allowance"
     }
 }

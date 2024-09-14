@@ -58,7 +58,12 @@ def cht_krs_steuern_bezdauer():
                     mode="markers",
                     marker=dict(color=color_rgba(colormap[ostwest], .5), size=10, line=dict(width=1, color="black")),
                     customdata=lgrp[["krs", "steuer_pc_pretty", "monate"]],
-                    hovertemplate="<b>%{customdata[0]}:</b><br><br>Steuerkraft: €%{customdata[1]}<br>durchschnittlich %{customdata[2]} Monate EG<extra></extra>",
+                    hovertemplate=(
+                        "<b>%{customdata[0]}:</b><br><br>"
+                        f"{t('Steuerkraft')}" + ": €%{customdata[1]}<br>"
+                        f"{t('durchschnittlich')}" + " %{customdata[2]} "
+                        f"{t('Monate Elterngeld')}<extra></extra>"
+                    ),
                     name=lgrp.ostwest.iloc[0] + " " + str(jahr)
                 )
             )
