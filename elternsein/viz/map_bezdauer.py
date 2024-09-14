@@ -45,7 +45,6 @@ def map_bezdauer():
 
     facet_var = "fm"
     facets = df_plot[facet_var].unique()
-    print(df_plot)
 
     cols = np.array([0, 1, 2])
     subpltcoord = cols
